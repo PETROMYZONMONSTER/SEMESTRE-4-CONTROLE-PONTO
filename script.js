@@ -18,14 +18,15 @@ function getUserLocation() {
     });
 }
 
+
 // Seleciona elementos do DOM para exibir data, hora e botões
-const diaSemana = document.getElementById("dia-semana"); // Elemento para exibir o dia da semana atual
-const dataAtual = document.getElementById("data-atual"); // Elemento para exibir a data atual
-const horaAtual = document.getElementById("hora-atual"); // Elemento para exibir a hora atual
-const btnRegistrarPonto = document.getElementById("btn-registrar-ponto"); // Botão para registrar o ponto
+const weekDay = document.getElementById("dia-semana"); // Elemento para exibir o dia da semana atual
+const currentDate = document.getElementById("data-atual"); // Elemento para exibir a data atual
+const currentHour = document.getElementById("hora-atual"); // Elemento para exibir a hora atual
+const registerButton = document.getElementById("btn-registrar-ponto"); // Botão para registrar o ponto
 
 // Adiciona um evento de clique ao botão "Registrar" para abrir o diálogo de registro
-btnRegistrarPonto.addEventListener("click", register);
+registerButton.addEventListener("click", register);
 
 // Obtém o elemento de diálogo para registro de ponto
 const dialogPonto = document.getElementById("dialog-ponto");
@@ -41,10 +42,10 @@ dialogHora.textContent = getCurrentTime();
 const selectRegisterType = document.getElementById("register-type");
 
 // Obtém o botão "Registrar" dentro do diálogo
-const btnDialogRegister = document.getElementById("btn-dialog-register");
+const registerDialogButton = document.getElementById("btn-dialog-register");
 
 // Adiciona um evento de clique ao botão "Registrar" dentro do diálogo
-btnDialogRegister.addEventListener("click", async () => {
+registerDialogButton.addEventListener("click", async () => {
     // Cria um novo objeto de registro com o tipo selecionado
     let register = await getObjectRegister(selectRegisterType.value);
 
@@ -67,17 +68,17 @@ btnDialogRegister.addEventListener("click", async () => {
 // Função para definir o tipo de registro para a próxima entrada com base na última
 function setRegisterType() {
     let lastType = localStorage.getItem("lastRegisterType");
-    if (lastType === "entrada") {
-        selectRegisterType.value = "intervalo";
-    } else if (lastType === "intervalo") {
-        selectRegisterType.value = "volta-intervalo";
-    } else if (lastType === "volta-intervalo") {
-        selectRegisterType.value = "saida";
-    } else if (lastType === "saida") {
-        selectRegisterType.value = "entrada";
+    if (lastType === "Entrada") {
+        selectRegisterType.value = "Intervalo";
+    } else if (lastType === "Intervalo") {
+        selectRegisterType.value = "Volta intervalo";
+    } else if (lastType === "Volta intervalo") {
+        selectRegisterType.value = "Saída";
+    } else if (lastType === "Saída") {
+        selectRegisterType.value = "Entrada";
     } else {
         // Valor padrão se nenhum lastType for encontrado
-        selectRegisterType.value = "entrada";
+        selectRegisterType.value = "Entrada";
     }
 }
 
@@ -95,6 +96,7 @@ async function getObjectRegister(registerType) {
     return {
         "date": getCurrentDate(),
         "time": getCurrentTime(),
+        "week": getWeekday(),
         "location": location, // Localização do usuário ou null se indisponível
         "id": Date.now(), // ID único baseado no timestamp atual
         "type": registerType
@@ -171,12 +173,12 @@ function removeTask(id) {
 
 // Função para atualizar a hora atual exibida
 function updateContentHour() {
-    horaAtual.textContent = getCurrentTime();
+    currentHour.textContent = getCurrentTime();
 }
 
 // Define o dia da semana e a data atuais nos elementos correspondentes
-diaSemana.textContent = getWeekday();
-dataAtual.textContent = getCurrentDate();
+weekDay.textContent = getWeekday();
+currentDate.textContent = getCurrentDate();
 
 // Função para obter a hora atual formatada como HH:mm:ss
 function getCurrentTime() {
@@ -204,11 +206,12 @@ function addTask(register) {
     let li = document.createElement('li');
     li.setAttribute('data-id', register.id); // Atribui o ID único ao elemento <li>
 
-    li.textContent = `${register.type}: ${register.date} ${register.time}`;
+    li.innerHTML = `<h4>${register.type}</h4><br>${register.date}</br>${register.time}`
 
     // Cria um botão de remover para a tarefa
     let removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remover';
+    removeBtn.style.marginTop='-20px';
     removeBtn.addEventListener('click', () => {
         removeTask(register.id);
     });
@@ -226,7 +229,66 @@ setInterval(updateContentHour, 1000);
 // Carrega os registros do localStorage e os exibe
 loadRegisters();
 
+function initializeTabContainer(tabContainer) {
+    const tabButtons = tabContainer.querySelectorAll('.tab-button');
+    const tabBackground = tabContainer.querySelector('.tab-background');
+    const tabContentContainer = tabContainer.nextElementSibling;
+    const tabItems = tabContentContainer.querySelectorAll('.ta-tab-item');
+    let currentActiveTab = 0;
+
+    function setActiveTab(newTabIndex) {
+        const currentTab = tabButtons[currentActiveTab];
+        const newTab = tabButtons[newTabIndex];
+
+        tabButtons.forEach(button => button.classList.remove('active'));
+        newTab.classList.add('active');
+
+        tabItems.forEach(item => {
+            if (item.dataset.tab == newTab.dataset.tab) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        const currentRect = currentTab.getBoundingClientRect();
+        const newRect = newTab.getBoundingClientRect();
+        const containerRect = tabButtons[0].parentElement.getBoundingClientRect();
+
+        if (newTabIndex > currentActiveTab) {
+            // Moving right
+            tabBackground.style.width = `${newRect.right - currentRect.left}px`;
+            tabBackground.style.left = `${currentRect.left - containerRect.left}px`;
+
+            setTimeout(() => {
+                tabBackground.style.width = `${newRect.width}px`;
+                tabBackground.style.left = `${newRect.left - containerRect.left}px`;
+            }, 150);
+        } else {
+            // Moving left
+            tabBackground.style.width = `${currentRect.right - newRect.left}px`;
+            tabBackground.style.left = `${newRect.left - containerRect.left}px`;
+
+            setTimeout(() => {
+                tabBackground.style.width = `${newRect.width}px`;
+            }, 150);
+        }
+
+        currentActiveTab = newTabIndex;
+    }
+
+    tabButtons.forEach((button, index) => {
+        button.addEventListener('click', () => setActiveTab(index));
+    });
+
+    // Initialize the first tab as active
+    setActiveTab(0);
+}
+
 // Logs de depuração no console
 console.log(getWeekday());
 console.log(getCurrentTime());
 console.log(getCurrentDate());
+
+// Initialize all tab containers
+document.querySelectorAll('.tab-container').forEach(initializeTabContainer);
