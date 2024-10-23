@@ -100,8 +100,43 @@ dialog {
     position: absolute;
     top: 50%;
     left: 50%;
+    border-radius: 5px;
     margin-right: -50%;
-    transform: translate(-50%, -50%) 
+    transform: translate(-50%, -50%);
+    box-shadow: 10px 10px 0px #111;
+    width: 40vw;
+    height: 20vw;
+    max-height: 200px;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* Classe para separar o conteudo dentro do dialog do proprio dialog, 
+ senão não é possivel centralizar sem quebrar a caixa de dialog */
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: auto;
+}
+
+.dialog-button {
+    font-weight: bold;
+    color: #e4e4e4;
+    background-color: #474747;
+    border-radius: 5px;
+    padding: 6px 10px;
+    cursor: pointer;
+    margin-left: 10px;
 }
 
 button {
@@ -137,7 +172,7 @@ body {
     padding: 10px 20px;
     font-size: 16px;
     border: none;
-    color: #171616;
+    color: #555555;
     background-color: transparent;
     cursor: pointer;
     position: relative;
