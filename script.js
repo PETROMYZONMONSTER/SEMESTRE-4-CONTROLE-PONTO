@@ -31,7 +31,10 @@ registerButton.addEventListener("click", register);
 // Obtém o elemento de diálogo para registro de ponto
 const dialogPonto = document.getElementById("dialog-ponto");
 
-// Define a data e hora atuais no diálogo
+// Define a data, a hora e o dia atual no diálogo
+const dialogDia = document.getElementById("dialog-dia");
+dialogDia.textContent = getWeekday();
+
 const dialogData = document.getElementById("dialog-data");
 dialogData.textContent = getCurrentDate();
 
@@ -244,7 +247,7 @@ function initializeTabContainer(tabContainer) {
         newTab.classList.add('active');
 
         tabItems.forEach(item => {
-            if (item.dataset.tab == newTab.dataset.tab) {
+            if (item.dataset.tab === newTab.dataset.tab) {
                 item.classList.add('active');
             } else {
                 item.classList.remove('active');
