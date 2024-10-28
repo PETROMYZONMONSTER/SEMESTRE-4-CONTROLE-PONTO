@@ -6,7 +6,8 @@
     color: #474747;
 }
 
-h2,h4 {
+h2,
+h4 {
     margin-bottom: 0.7rem;
 }
 
@@ -52,6 +53,7 @@ hr {
 }
 
 .info-container, li {
+    min-width: 17vw;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -99,19 +101,13 @@ select {
 }
 
 dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    width: 40vw;
-    height: 20vw;
-    max-height: 200px;
-    max-width: 400px;
+    position: relative;
+    width: 20vw;
+    height: 12vw;
     border: 1px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 40px;
 }
 
 /* Classe para separar o conteudo dentro do dialog do proprio dialog,
