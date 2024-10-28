@@ -131,6 +131,20 @@ dialog {
     padding: 20px;
 }
 
+.deletedialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    min-width: 5vw;
+    min-height: 5vw;
+    border: 1px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
 /* Classe para separar o conteudo dentro do dialog do proprio dialog,
  senão não é possivel centralizar sem quebrar a caixa de dialog */
 .dialog-content {
@@ -173,6 +187,9 @@ button {
 }
 
 input {
+    margin: 0.5rem;
+}
+.fileinput {
     margin-top: 1rem;
 }
 
