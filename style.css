@@ -165,6 +165,11 @@ body {
     margin-bottom: 10px;
 }
 
+#absence-file {
+    margin-top: 10px;
+    padding: 5px;
+}
+
 textarea {
     width: 100%;
     min-height: 60px;
@@ -173,6 +178,7 @@ textarea {
     padding: 10px;
     resize: none;
 }
+
 
 .tab-button {
     padding: 10px 20px;

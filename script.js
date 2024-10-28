@@ -276,6 +276,68 @@ function initializeTabContainer(tabContainer) {
     setActiveTab(0);
 }
 
+// Seleção de elementos do DOM
+const btnRegistrarAusencia = document.getElementById("btn-registrar-ausencia");
+const dialogAusencia = document.getElementById("dialog-ausencia");
+const saveAbsenceButton = document.getElementById("save-absence");
+const absenceCommentInput = document.getElementById("absence-comment");
+const absenceFileInput = document.getElementById("absence-file");
+const tasksList = document.getElementById('tasksList');
+
+// Evento para abrir o diálogo de justificativa de ausência
+btnRegistrarAusencia.addEventListener("click", () => {
+    dialogAusencia.showModal();
+});
+
+// Função para salvar a justificativa de ausência
+saveAbsenceButton.addEventListener("click", () => {
+    const comment = absenceCommentInput.value;
+    const file = absenceFileInput.files[0];
+    const absenceData = {
+        comment: comment,
+        fileName: file ? file.name : null,
+        date: getCurrentDate(),
+        id: Date.now(),
+    };
+
+    saveAbsenceLocalStorage(absenceData);
+    addAbsenceToHistory(absenceData);
+    dialogAusencia.close();
+    alert("Ausência registrada com sucesso!");
+});
+
+// Função para salvar a ausência no localStorage
+function saveAbsenceLocalStorage(absence) {
+    let absences = getAbsencesLocalStorage();
+    absences.push(absence);
+    localStorage.setItem("absences", JSON.stringify(absences));
+}
+
+// Função para obter ausências do localStorage
+function getAbsencesLocalStorage() {
+    let absences = localStorage.getItem("absences");
+    return absences ? JSON.parse(absences) : [];
+}
+
+// Função para adicionar a ausência ao histórico
+function addAbsenceToHistory(absence) {
+    let li = document.createElement('li');
+    li.setAttribute('data-id', absence.id);
+
+    let fileText = absence.fileName ? `Arquivo: ${absence.fileName}` : "Sem arquivo anexado";
+    li.innerHTML = `<h4>Ausência</h4><p>Data: ${absence.date}</p><p>Comentário: ${absence.comment}</p><p>${fileText}</p>`;
+
+    let removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remover';
+    removeBtn.style.marginTop = '-20px';
+    removeBtn.addEventListener('click', () => {
+        removeTask(absence.id);
+    });
+
+    li.appendChild(removeBtn);
+    tasksList.appendChild(li);
+}
+
 // Logs de depuração no console
 console.log(getWeekday());
 console.log(getCurrentTime());
