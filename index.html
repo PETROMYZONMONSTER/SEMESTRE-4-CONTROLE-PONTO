@@ -39,7 +39,7 @@
                         <h4 id="dialog-dia">Dia</h4>
                         <p id="dialog-data">Data</p>
                         <p id="dialog-hora">Hora</p>
-                        <textarea id="dialog-comentario" placeholder="Adicione um comentário"></textarea>
+                        <label for="dialog-comentario"></label><textarea id="dialog-comentario" placeholder="Adicione um comentário"></textarea>
                     </div>
                     <div class="button-container">
                         <button class="dialog-button" id="btn-dialog-register">Registrar</button>
@@ -76,9 +76,14 @@
             <dialog id="dialog-ausencia">
                 <div class="dialog-content">
                     <h2>Justificar Ausência</h2>
+                    <div class="info-container">
                     <textarea id="absence-comment" placeholder="Descreva o motivo"></textarea>
-                    <input type="file" id="absence-file" />
-                    <button id="save-absence">Salvar</button>
+                    <input type="file" id="absence-file"/>
+                    </div>
+                    <div class="button-container">
+                        <button id="save-absence">Salvar</button>
+                        <button class="dialog-button" id="ausencia-fechar">X</button>
+                    </div>
                 </div>
             </dialog>
 
