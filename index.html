@@ -43,7 +43,6 @@
                     </div>
                     <div class="button-container">
                         <button class="dialog-button" id="btn-dialog-register">Registrar</button>
-                        <button class="dialog-button" id="btn-dialog-change">Alterar</button>
                         <button class="dialog-button" id="dialog-fechar">X</button>
                     </div>
                 </div>
@@ -52,33 +51,39 @@
             <dialog id="dialog-edit">
                 <div class="dialog-content">
                     <h2>Editar Registro</h2>
-                    <label for="edit-register-type">Tipo de Registro:</label>
-                    <select id="edit-register-type" name="turno">
-                        <option value="Entrada">Entrada</option>
-                        <option value="Intervalo">Intervalo</option>
-                        <option value="Volta intervalo">Volta Intervalo</option>
-                        <option value="Saída">Saída</option>
-                    </select>
+                    <div class="info-container">
+                    <label for="edit-date">Data:</label>
+                    <input type="date" id="edit-date" />
+                    <label for="edit-time">Horário:</label>
+                    <input type="time" id="edit-time" />
                     <textarea id="edit-comment" placeholder="Adicione um comentário"></textarea>
-                    <button id="edit-dialog-save">Salvar</button>
+                    </div>
+                    <div class="button-container">
+                    <button class="dialog-button" id="edit-dialog-save">Salvar</button>
+                    <button class="dialog-button" id="edit-dialog-cancel">X</button>
+                    </div>
                 </div>
             </dialog>
 
-            <dialog id="dialog-delete">
+            <dialog class="deletedialog" id="dialog-delete">
                 <div class="dialog-content">
                     <h2>Confirmar Exclusão</h2>
                     <p>Você tem certeza que deseja excluir este ponto?</p>
-                    <button id="confirm-delete">Sim</button>
-                    <button onclick="dialogDelete.close()">Não</button>
+                    <div class="button-container">
+                        <button id="confirm-delete">Sim</button>
+                        <button id="cancel-delete">X</button>
+                    </div>
                 </div>
             </dialog>
 
+
+            </dialog>
             <dialog id="dialog-ausencia">
                 <div class="dialog-content">
                     <h2>Justificar Ausência</h2>
                     <div class="info-container">
-                    <textarea id="absence-comment" placeholder="Descreva o motivo"></textarea>
-                    <input type="file" id="absence-file"/>
+                        <textarea id="absence-comment" placeholder="Descreva o motivo"></textarea>
+                        <input class="fileinput" type="file" id="absence-file"/>
                     </div>
                     <div class="button-container">
                         <button id="save-absence">Salvar</button>
@@ -86,7 +91,6 @@
                     </div>
                 </div>
             </dialog>
-
             <div class="general-container">
                 <div class="recent">
                     <h2>Histórico</h2>
@@ -96,6 +100,7 @@
                         <button class="tab-button" data-tab="year">Último ano</button>
                         <div class="tab-background"></div>
                     </div>
+
                     <div class="tab-content">
                         <div class="ta-tab-item active" data-tab="week">
                             <ul id="tasksList"></ul>
