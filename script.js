@@ -1,23 +1,58 @@
-// Função para obter a localização geográfica atual do usuário (retorna uma Promise)
-function getUserLocation() {
-    return new Promise((resolve, reject) => {
-        // Solicita a posição atual do usuário
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                // Em caso de sucesso, resolve a Promise com as coordenadas da posição
-                resolve({
-                    lat: position.coords.latitude,
-                    long: position.coords.longitude
-                });
-            },
-            (error) => {
-                // Em caso de erro (por exemplo, se o usuário negar a permissão), rejeita a Promise
-                reject(error);
-            }
-        );
-    });
+// Função para abrir o diálogo de confirmação de exclusão
+function confirmDelete(id) {
+    const dialogDelete = document.getElementById("dialog-delete");
+
+    if (!dialogDelete) {
+        console.error("Diálogo de exclusão não encontrado.");
+        return;
+    }
+
+    // Configura o evento do botão "Sim"
+    const confirmButton = document.getElementById("confirm-delete");
+    confirmButton.onclick = () => {
+        removeTask(id); // Chama a função para remover o item
+        dialogDelete.close(); // Fecha o diálogo
+    };
+
+    dialogDelete.showModal(); // Exibe o diálogo
 }
 
+
+
+// Função para filtrar registros por semana, mês e ano
+function filterRegisters(period) {
+    const now = new Date();
+    let filteredRegisters = registerLocalStorage.filter(register => {
+        const registerDate = new Date(register.date.split('/').reverse().join('-')); // Converte para Date
+
+        switch (period) {
+            case 'week':
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(now.getDate() - 7);
+                return registerDate >= oneWeekAgo;
+            case 'month':
+                return registerDate.getMonth() === now.getMonth() &&
+                    registerDate.getFullYear() === now.getFullYear();
+            case 'year':
+                return registerDate.getFullYear() === now.getFullYear();
+            default:
+                return true;
+        }
+    });
+
+    displayFilteredRegisters(filteredRegisters);
+}
+
+// Função para exibir registros filtrados
+function displayFilteredRegisters(filteredRegisters) {
+    document.getElementById('tasksList').innerHTML = '';
+    filteredRegisters.forEach(register => addTask(register));
+}
+
+// Adicionar eventos nos botões de filtro
+document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => filterRegisters(button.dataset.tab));
+});
 
 // Seleciona elementos do DOM para exibir data, hora e botões
 const weekDay = document.getElementById("dia-semana"); // Elemento para exibir o dia da semana atual
@@ -193,23 +228,78 @@ function getWeekday() {
     return weekday[d.getDay()];
 }
 
-// Função para adicionar uma tarefa (registro) à lista de tarefas (histórico)
+// Função para adicionar uma tarefa à lista de tarefas
 function addTask(register) {
     let li = document.createElement('li');
     li.setAttribute('data-id', register.id);
 
-    li.innerHTML = `<h4>${register.type}</h4><br>${register.date}</br>${register.time}<br><p>${register.comentario || ''}</p>`;
+    li.innerHTML = `<h4>${register.type}</h4>
+    <br><p>${register.date}</p>
+    </br><p>${register.time}</p>
+    <div class="comment-container">
+    <br>${register.comentario || ''}
+    </div>`;
 
+    // Botão para editar o registro
+    let editBtn = document.createElement('button');
+    editBtn.textContent = 'Editar';
+    editBtn.addEventListener('click', () => openEditDialog(register));
+
+    // Botão para remover o registro
     let removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remover';
-    removeBtn.style.marginTop = '-20px';
-    removeBtn.addEventListener('click', () => {
-        removeTask(register.id);
-    });
+    removeBtn.addEventListener('click', () => confirmDelete(register.id));
 
+    li.appendChild(editBtn);
     li.appendChild(removeBtn);
     document.getElementById('tasksList').appendChild(li);
 }
+
+function openEditDialog(register) {
+    const dialogEdit = document.getElementById('dialog-edit');
+    const editDate = document.getElementById('edit-date');
+    const editTime = document.getElementById('edit-time');
+    const editComment = document.getElementById('edit-comment');
+
+    // Preencher o formulário com os dados atuais do registro
+    editDate.value = register.date.split('/').reverse().join('-'); // Converte para o formato YYYY-MM-DD
+    editTime.value = register.time;
+    editComment.value = register.comentario || '';
+
+    // Configurar o botão de salvar
+    document.getElementById('edit-dialog-save').onclick = () => {
+        register.date = editDate.value.split('-').reverse().join('/');
+        register.time = editTime.value;
+        register.comentario = editComment.value;
+
+        saveEditedRegister(register);
+        dialogEdit.close(); // Fechar o diálogo
+    };
+
+    // Abrir o diálogo de edição
+    dialogEdit.showModal();
+}
+
+function saveEditedRegister(editedRegister) {
+    // Encontrar o índice do registro a ser editado
+    const index = registerLocalStorage.findIndex(r => r.id === editedRegister.id);
+
+    if (index !== -1) {
+        // Atualizar o registro no array
+        registerLocalStorage[index] = editedRegister;
+
+        // Salvar no localStorage
+        localStorage.setItem('register', JSON.stringify(registerLocalStorage));
+
+        // Recarregar a lista de registros
+        loadRegisters();
+    }
+}
+
+document.getElementById('edit-dialog-cancel').onclick = () => {
+    const dialogEdit = document.getElementById('dialog-edit');
+    dialogEdit.close();
+};
 
 // Atualiza a hora atual imediatamente
 updateContentHour();
@@ -303,8 +393,12 @@ saveAbsenceButton.addEventListener("click", () => {
     saveAbsenceLocalStorage(absenceData);
     addAbsenceToHistory(absenceData);
     dialogAusencia.close();
-    alert("Ausência registrada com sucesso!");
 });
+
+document.getElementById('ausencia-fechar').onclick = () => {
+    const dialogClose = document.getElementById('dialog-ausencia');
+    dialogClose.close();
+};
 
 // Função para salvar a ausência no localStorage
 function saveAbsenceLocalStorage(absence) {
@@ -325,11 +419,16 @@ function addAbsenceToHistory(absence) {
     li.setAttribute('data-id', absence.id);
 
     let fileText = absence.fileName ? `Arquivo: ${absence.fileName}` : "Sem arquivo anexado";
-    li.innerHTML = `<h4>Ausência</h4><p>Data: ${absence.date}</p><p>Comentário: ${absence.comment}</p><p>${fileText}</p>`;
+    li.innerHTML = `<h4>Ausência</h4>
+    <p>${absence.date}</p>
+    <div class="comment-container">
+        ${absence.comment}
+        <hr>
+        <h5><u>${fileText}</u></h5>
+    </div>`;
 
     let removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remover';
-    removeBtn.style.marginTop = '-20px';
     removeBtn.addEventListener('click', () => {
         removeTask(absence.id);
     });
@@ -337,6 +436,20 @@ function addAbsenceToHistory(absence) {
     li.appendChild(removeBtn);
     tasksList.appendChild(li);
 }
+
+// Função para cancelar a exclusão e fechar o diálogo
+const cancelDeleteButton = document.getElementById("cancel-delete");
+cancelDeleteButton.onclick = () => {
+    const dialogDelete = document.getElementById("dialog-delete");
+    dialogDelete.close();
+};
+
+
+let removeBtn = document.createElement('button');
+removeBtn.textContent = 'Remover';
+removeBtn.addEventListener('click', () => {
+    confirmDelete(register.id); // Chama a função para abrir o diálogo de confirmação
+});
 
 // Logs de depuração no console
 console.log(getWeekday());
