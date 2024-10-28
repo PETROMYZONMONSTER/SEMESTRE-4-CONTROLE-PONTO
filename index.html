@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +18,8 @@
                     <h4 id="dia-semana"></h4>
                     <p id="data-atual"></p>
                     <p id="hora-atual"></p>
-                    <label for="register-type"></label><select id="register-type" name="turno">
+                    <label for="register-type"></label>
+                    <select id="register-type" name="turno">
                         <option value="Entrada">Entrada</option>
                         <option value="Intervalo">Intervalo</option>
                         <option value="Volta intervalo">Volta Intervalo</option>
@@ -25,7 +27,11 @@
                     </select>
                     <button id="btn-registrar-ponto">Registrar</button>
                 </div>
+                <div class="button-container">
+                    <button id="btn-registrar-ausencia">Ausência</button>
+                </div>
             </div>
+
             <dialog id="dialog-ponto">
                 <div class="dialog-content">
                     <h2>Confirme as informações</h2>
@@ -41,36 +47,67 @@
                     </div>
                 </div>
             </dialog>
+
+            <dialog id="dialog-edit">
+                <div class="dialog-content">
+                    <h2>Editar Registro</h2>
+                    <label for="edit-register-type">Tipo de Registro:</label>
+                    <select id="edit-register-type" name="turno">
+                        <option value="Entrada">Entrada</option>
+                        <option value="Intervalo">Intervalo</option>
+                        <option value="Volta intervalo">Volta Intervalo</option>
+                        <option value="Saída">Saída</option>
+                    </select>
+                    <textarea id="edit-comment" placeholder="Adicione um comentário"></textarea>
+                    <button id="edit-dialog-save">Salvar</button>
+                </div>
+            </dialog>
+
+            <dialog id="dialog-delete">
+                <div class="dialog-content">
+                    <h2>Confirmar Exclusão</h2>
+                    <p>Você tem certeza que deseja excluir este ponto?</p>
+                    <button id="confirm-delete">Sim</button>
+                    <button onclick="dialogDelete.close()">Não</button>
+                </div>
+            </dialog>
+
+            <dialog id="dialog-ausencia">
+                <div class="dialog-content">
+                    <h2>Justificar Ausência</h2>
+                    <textarea id="absence-comment" placeholder="Descreva o motivo"></textarea>
+                    <input type="file" id="absence-file" />
+                    <button id="save-absence">Salvar</button>
+                </div>
+            </dialog>
+
             <div class="general-container">
                 <div class="recent">
                     <h2>Histórico</h2>
                     <div class="tab-container">
-                        <button class="tab-button active" data-tab="1">Última semana</button>
-                        <button class="tab-button" data-tab="2">Último mês</button>
-                        <button class="tab-button" data-tab="3">Último ano</button>
+                        <button class="tab-button active" data-tab="week">Última semana</button>
+                        <button class="tab-button" data-tab="month">Último mês</button>
+                        <button class="tab-button" data-tab="year">Último ano</button>
                         <div class="tab-background"></div>
                     </div>
                     <div class="tab-content">
-                        <div class="ta-tab-item active" data-tab="1">
+                        <div class="ta-tab-item active" data-tab="week">
                             <ul id="tasksList"></ul>
                         </div>
-                        <div class="ta-tab-item" data-tab="2"><h4>Nenhum ponto registrado</h4></div>
-                        <div class="ta-tab-item" data-tab="3"><h4>Nenhum ponto registrado</h4></div>
+                        <div class="ta-tab-item" data-tab="month"><h4>Nenhum ponto registrado</h4></div>
+                        <div class="ta-tab-item" data-tab="year"><h4>Nenhum ponto registrado</h4></div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="user-container">
             <h2>Nome do funcionário</h2>
             <hr>
             <h3>Função de trabalho</h3>
-            <div class="user-info-container">
-                Início
-            </div>
-            <div class="user-info-container">
-                Paínel
-            </div>
-            <a href="">sair</a>
+            <div class="user-info-container">Início</div>
+            <div class="user-info-container">Painel</div>
+            <a href="">Sair</a>
         </div>
     </div>
 </div>
