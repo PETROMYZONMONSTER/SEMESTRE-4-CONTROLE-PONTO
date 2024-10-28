@@ -47,24 +47,14 @@ const selectRegisterType = document.getElementById("register-type");
 // Obtém o botão "Registrar" dentro do diálogo
 const registerDialogButton = document.getElementById("btn-dialog-register");
 
-// Adiciona um evento de clique ao botão "Registrar" dentro do diálogo
+const comentarioInput = document.getElementById("dialog-comentario");
+
 registerDialogButton.addEventListener("click", async () => {
-    // Cria um novo objeto de registro com o tipo selecionado
-    let register = await getObjectRegister(selectRegisterType.value);
-
-    // Salva o registro no localStorage
+    let register = await getObjectRegister(selectRegisterType.value, comentarioInput.value);
     saveRegisterLocalStorage(register);
-
-    // Adiciona o registro à lista de tarefas (histórico)
     addTask(register);
-
-    // Salva o último tipo de registro no localStorage
     localStorage.setItem("lastRegisterType", selectRegisterType.value);
-
-    // Atualiza o tipo de registro para a próxima vez
     setRegisterType();
-
-    // Fecha o diálogo
     dialogPonto.close();
 });
 
@@ -86,13 +76,11 @@ function setRegisterType() {
 }
 
 // Função assíncrona para criar um objeto de registro com data, hora, localização, id e tipo atuais
-async function getObjectRegister(registerType) {
+async function getObjectRegister(registerType, comentario) {
     let location;
     try {
-        // Aguarda a localização do usuário
         location = await getUserLocation();
     } catch (error) {
-        // Se houver erro (por exemplo, se o usuário negar a permissão), define a localização como nula
         console.error('Erro ao obter a localização:', error);
         location = null;
     }
@@ -100,9 +88,10 @@ async function getObjectRegister(registerType) {
         "date": getCurrentDate(),
         "time": getCurrentTime(),
         "week": getWeekday(),
-        "location": location, // Localização do usuário ou null se indisponível
-        "id": Date.now(), // ID único baseado no timestamp atual
-        "type": registerType
+        "location": location,
+        "id": Date.now(),
+        "type": registerType,
+        "comentario": comentario
     };
 }
 
@@ -207,14 +196,13 @@ function getWeekday() {
 // Função para adicionar uma tarefa (registro) à lista de tarefas (histórico)
 function addTask(register) {
     let li = document.createElement('li');
-    li.setAttribute('data-id', register.id); // Atribui o ID único ao elemento <li>
+    li.setAttribute('data-id', register.id);
 
-    li.innerHTML = `<h4>${register.type}</h4><br>${register.date}</br>${register.time}`
+    li.innerHTML = `<h4>${register.type}</h4><br>${register.date}</br>${register.time}<br><p>${register.comentario || ''}</p>`;
 
-    // Cria um botão de remover para a tarefa
     let removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remover';
-    removeBtn.style.marginTop='-20px';
+    removeBtn.style.marginTop = '-20px';
     removeBtn.addEventListener('click', () => {
         removeTask(register.id);
     });
@@ -295,4 +283,3 @@ console.log(getCurrentDate());
 
 // Initialize all tab containers
 document.querySelectorAll('.tab-container').forEach(initializeTabContainer);
-
