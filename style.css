@@ -27,7 +27,6 @@ hr {
 .page-body {
     width: 100%;
     height: auto;
-    background-color: #e4e4e4;
 }
 
 .main-division {
@@ -47,7 +46,7 @@ hr {
     width: 80rem;
     background: white;
     padding: 20px;
-    margin: 50px 90px 90px;
+    margin: 50px 90px 50px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -63,15 +62,18 @@ hr {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+#register-type {
+    background-color: white;
+}
+
 .user-container {
-    width: 15%;
+    width: 20%;
     min-height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: white;
     padding: 20px;
-    margin: 50px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -100,18 +102,19 @@ dialog {
     position: absolute;
     top: 50%;
     left: 50%;
-    border-radius: 5px;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-    box-shadow: 10px 10px 0px #111;
     width: 40vw;
     height: 20vw;
     max-height: 200px;
     max-width: 400px;
+    border: 1px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
-/* Classe para separar o conteudo dentro do dialog do proprio dialog, 
+/* Classe para separar o conteudo dentro do dialog do proprio dialog,
  senão não é possivel centralizar sem quebrar a caixa de dialog */
 .dialog-content {
     display: flex;
@@ -148,7 +151,6 @@ button {
     padding: 0.3rem;
 }
 
-
 /* Parte do menu */
 body {
     font-family: Arial, sans-serif;
@@ -156,9 +158,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #e4e4e4;
 }
 
 .tab-container {
@@ -185,9 +186,6 @@ body {
     background-color:transparent;
 }
 
-.tab-container.second .tab-background {
-    background-color: cyan;
-}
 .tab-background {
     position: absolute;
     top: 0;
@@ -205,9 +203,8 @@ body {
 
 .ta-tab-item {
     display: none;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: -100px;
 }
 
 .ta-tab-item.active {
