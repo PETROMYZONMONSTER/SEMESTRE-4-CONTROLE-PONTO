@@ -295,3 +295,4 @@ console.log(getCurrentDate());
 
 // Initialize all tab containers
 document.querySelectorAll('.tab-container').forEach(initializeTabContainer);
+
